@@ -1,0 +1,142 @@
+
+<link rel="import" href="../at-core-activity-queue/at-core-activity-queue.html" />
+<link rel="import" href="../at-app-card/at-app-card.html" />
+
+<dom-module id="at-intent-card">
+  <template>
+    <style>
+      :host {
+      }
+
+    </style>
+    <at-app-card id="card"></at-app-card>
+    <at-core-activity-queue id="carbonChatActivityQueue" on-response="_receiveResponseFromApi" on-error="_handleApiError"></at-core-activity-queue>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'at-intent-card',
+      properties: {      
+        serverUrl: {
+          type: String,
+          value: 'service://chatbot'
+        },
+        cardContainerType: {
+          type: String,
+          value: 'chat'
+        },
+        eventName: {
+          type: String,
+          value: 'change'
+        },
+        eventSourceSelector: {
+          type: String,
+          value: ''
+        },
+        searchTerm: {
+          type: String,
+          value: '',
+          observer:'_searchTermChanged'
+        },
+        box: {
+          type: String,
+          value: "card",
+          xtype: "enum",
+          xvaluelist: [
+            { title: "None", value: "none" },
+            { title: "Plain", value: "plain" },
+            { title: "Card", value: "card" }
+          ]
+        }
+      },
+      observers: [
+        '_eventChanged(eventName, eventSourceSelector)'
+      ],
+
+      ready: function () {
+      },
+   
+      _eventChanged: function(eventName, eventSourceSelector) {
+
+        if (!eventName || !eventSourceSelector) return;
+
+        var el = document.querySelector(eventSourceSelector);
+        if (!el) return;
+
+        if (!eventName) return;
+
+        // listen for events
+        el.addEventListener(eventName, function(e) {         
+          this.searchTerm = e.target.value;
+        }.bind(this));
+
+        // search with current value
+        this.searchTerm = el.value;
+      },
+
+      _searchTermChanged: function (n, o) {
+
+        if (!this.searchTerm) {
+          this.$.card.name = "";
+          return;
+        }
+
+        // create request
+        var jsonContent = JSON.stringify({ query: this.searchTerm });
+
+        var requestOptions = {
+          method: "POST",
+          url: this.serverUrl,
+          contentType: "application/json",
+          body: jsonContent,
+        }
+
+        this.$.carbonChatActivityQueue.addRequest(requestOptions);
+      },
+
+      _receiveResponseFromApi: function (e) {
+
+        var response = e.detail.response;
+        var responseResult = response.result;        
+        var cardMetadataDefinition = responseResult.card;
+        var cardData = responseResult.intent.data;
+        cardData._container = this.cardContainerType;        
+        var detail = e.detail;
+        
+        // no valid card found
+        if (!cardMetadataDefinition) {
+          this.$.card.name = '';
+          return;
+        }
+
+        // push card metadata and definition to at-core-state
+        Polymer.signal('state-push', {
+          url: "service://cardDefinition?cardName=" + cardMetadataDefinition.name,
+          response: {
+            Data: cardMetadataDefinition
+          }
+        });
+
+        // push card data to at-core-state
+        Polymer.signal('state-push', {
+          url: "service://cardData/" + cardMetadataDefinition.name,
+          response: {
+            Data: cardData
+          }
+        });
+
+        this.$.card.box = this.box;
+        this.$.card.name = cardMetadataDefinition.name;
+
+      },
+
+      _handleApiError: function (e) {
+
+      }
+
+    
+
+    });
+  </script>
+
+</dom-module>

@@ -1,0 +1,8 @@
+{
+  "name": "at-carbon-chat",
+  "version": "0.0.1.104",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  }
+}

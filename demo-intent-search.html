@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Intent Card Demo</title>
+
+  <style>
+    .search {
+      width: 100%;
+      position: relative;
+      height: 50px;
+    }
+
+    .searchTerm {
+      float: left;
+      width: 100%;
+      border: 3px solid blue;
+      padding: 5px;
+      height: 20px;
+      outline: none;
+    }
+
+    #searchButton {
+      position: absolute;
+      right: -50px;
+      width: 100px;
+      height: 36px;
+      border: 1px solid blue;
+      background: blue;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 350px;
+      margin: 0 auto;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- 1. add the following line in <body> -->
+  <script src="/components/at-app/at-app-context-es6.js" id="at-app-context" async include-element token="u:xUHOJ7L3HGR0nBB4BdlbzPCYpJmzo5ww"></script>
+
+
+  <h1>event based</h1>
+
+  <div class="container">
+
+    <div class="search">
+      <input id="search1" type="text" class="searchTerm" placeholder="What are you looking for?">
+    </div>
+
+    <!-- 2. include card -->
+    <include-element id="intent-card1" name="at-intent-card/at-intent-card.html" event-source-selector="#search1"></include-element>
+
+  </div>
+  <br /><br />
+
+  <h1>imperative</h1>
+
+  <div class="container">
+
+    <div class="search">
+      <input id="search2" type="text" class="searchTerm" placeholder="What are you looking for?">
+      <button id="searchButton">Search</button>
+    </div>
+
+    <!-- 2. include card -->
+    <include-element id="intent-card2" name="at-intent-card/at-intent-card.html" search-term=""></include-element>
+
+  </div>
+
+
+  <script>
+
+    document.getElementById("searchButton").addEventListener('click', function () {
+      var input2 = document.getElementById("search2");
+      var card2 = document.getElementById("intent-card2");
+      card2.setAttribute("search-term", input2.value);
+    });
+
+
+    document.addEventListener('session-ready', function () {
+
+
+    });
+  </script>
+
+
+</body>
+
+</html>
