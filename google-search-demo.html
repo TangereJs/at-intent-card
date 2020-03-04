@@ -1,0 +1,82 @@
+﻿<!doctype html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Intent Card Demo</title>
+
+  <style>
+    #container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #intent-card {
+      max-width: 500px;
+      width: 100%;
+      padding: 22px 0 0 22px;
+    }
+  </style>
+
+
+
+</head>
+
+<body>
+
+
+  <script>
+
+    var LoadIntentCard = function (layout, searchTerm) {
+      var card = document.getElementById("intent-card");
+      card.setAttribute("search-term", searchTerm);
+    }
+
+    window.__gcse || (window.__gcse = { parsetags: 'onload' });
+    window.__gcse.searchCallbacks = {
+      web: {
+        starting: LoadIntentCard,
+      },
+    };
+  </script>
+
+
+  <div id="container">
+
+    <h1>Google Custom Search Integration Sample</h1>
+
+    <!-- 1. add the following line in <body> -->    
+    <script src="/components/at-app/at-app-context-es6.js" id="at-app-context" session-service-url="https://app.adenin.com/api/session/myprofile" async></script>
+
+
+    <div class="gcse-searchbox"></div>
+
+    <!-- 2. include card -->
+    <include-element id="intent-card" name="at-intent-card/at-intent-card.html" event-source-selector="#search1"></include-element>
+
+
+    <div class="gcse-searchresults"></div>
+
+    <script>
+
+      /* 3. assign search term */
+      var LoadIntentCard = function (layout, searchTerm) {
+        var card = document.getElementById("intent-card");
+        card.setAttribute("search-term", searchTerm);
+      }
+
+      window.__gcse || (window.__gcse = { parsetags: 'onload' });
+      window.__gcse.searchCallbacks = {
+        web: {
+          starting: LoadIntentCard,
+        },
+      };
+    </script>
+    <script async src="https://cse.google.com/cse.js?cx=002518004963485979666:hk46osz46bx"></script>
+
+  </div>
+
+
+</body>
+
+</html>

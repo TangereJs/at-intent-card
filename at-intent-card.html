@@ -97,7 +97,7 @@
       _receiveResponseFromApi: function (e) {
 
         var response = e.detail.response;
-        var responseResult = response.result;        
+        var responseResult = (response.result || response.Data.result);        
         var cardMetadataDefinition = responseResult.card;
         var cardData = responseResult.intent.data;
         cardData._container = this.cardContainerType;        
